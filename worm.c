@@ -107,11 +107,6 @@ int get_random_ip()
      return rand()%networkOmega + 1;
 }
 
-void infect_computer()
-{
-
-}
-
 int network_is_fully_infected(int infectedComputers)
 {
     return infectedComputers == 1000;
