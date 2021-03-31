@@ -66,13 +66,6 @@ void build_network(nodeType NodeStatus[])
     }
 }
 
-// Initialize the network node types
-void initialize_network()
-{
-    return;
-}
-
-
 void scan_network()
 {
 
