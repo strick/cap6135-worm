@@ -5,7 +5,6 @@
 #define scanRate 3  // The number of scans an infected computer can do
 #define simulationN 3 // The number of simulations we want to run
 #define simulationTime 3000  // How many times the simulation might run to infect all nodes
-#define t 1 // This is the current time step
 
 enum nodeType
 {
@@ -22,6 +21,15 @@ int lt[simulationN][simulationTime];
 
 int main(void)
 {
+    // The number of infected computers.
+    int infectedComputers = 1;
+
+    // While there are still susceptible computers in the network, try to infect more.
+    while(!network_is_fully_infected())
+    {
+
+    }
+
     return 0;
 }
 
@@ -46,4 +54,9 @@ void scan_network()
 void infect_computer()
 {
 
+}
+
+bool network_is_fully_infected()
+{
+    return false;
 }
