@@ -30,6 +30,7 @@ int main(void)
 {
     // The number of infected computers.
     int infectedComputers = 1;
+    int t = 0;
 
     // Build the network
     build_network(NodeStatus);
@@ -41,16 +42,18 @@ int main(void)
         for(int i=0; i<infectedComputers; i++)
         {
             int newInfections = 0;
+
+            // Attemp to infect new computrs
             newInfections = random_scan(NodeStatus);
 
-            infectedComputers += newInfections;
-
-            if(newInfections > 0){
-                printf("Infected count is up to %d\n", infectedComputers);
-                //display_infections(NodeStatus);
-            }
+            // Add to the count of the current infections
+            infectedComputers += newInfections;            
         }
+
+        t++;
     }
+
+    printf("Took %d cycles.\n", t);
 
     //save_results();
 
