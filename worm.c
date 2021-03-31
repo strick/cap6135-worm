@@ -18,6 +18,7 @@ void build_network(nodeType NodeStatus[]);
 int network_is_fully_infected(int infectedComputers);
 int random_scan(nodeType NodeStatus[]);
 int get_random_ip();
+void display_infections(nodeType NodeStatus[]);
 
 // Create an array of the node types so you can model the network.
 nodeType NodeStatus[networkOmega + 1];
@@ -46,6 +47,7 @@ int main(void)
 
             if(newInfections > 0){
                 printf("Infected count is up to %d\n", infectedComputers);
+                display_infections(NodeStatus);
             }
         }
     }
@@ -111,4 +113,16 @@ int network_is_fully_infected(int infectedComputers)
 {
     return infectedComputers == 1001;
     //return 0;
+}
+
+void display_infections(nodeType NodeStatus[])
+{
+    for(int i = 1; i<=networkOmega; i++)
+    {
+        if(NodeStatus[i] == infectious)
+        {
+            printf("Infected: %d\n", i);
+        } 
+
+    }
 }
