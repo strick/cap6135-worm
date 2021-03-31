@@ -15,6 +15,7 @@ typedef enum
 
 void build_network(nodeType NodeStatus[]);
 int network_is_fully_infected();
+void random_scan(nodeType NodeStatus[]);
 
 // Create an array of the node types so you can model the network.
 nodeType NodeStatus[networkOmega + 1];
@@ -33,8 +34,14 @@ int main(void)
     // While there are still susceptible computers in the network, try to infect more.
     while(!network_is_fully_infected())
     {
-
+        // For each infected node, preform a random scan
+        for(int i=0; i<infectedComputers; i++)
+        {
+            random_scan(NodeStatus);
+        }
     }
+
+    //save_results();
 
     return 0;
 }
@@ -61,7 +68,7 @@ void build_network(nodeType NodeStatus[])
     }
 }
 
-void scan_network()
+void random_scan(nodeType NodeStatus[])
 {
 
 }
