@@ -47,7 +47,7 @@ int main(void)
 
             if(newInfections > 0){
                 printf("Infected count is up to %d\n", infectedComputers);
-                display_infections(NodeStatus);
+                //display_infections(NodeStatus);
             }
         }
     }
@@ -77,6 +77,9 @@ void build_network(nodeType NodeStatus[])
             }            
         }
     }
+
+    // Iniitalie the pateient 0
+    NodeStatus[patientZero] = infectious;
 }
 
 int random_scan(nodeType NodeStatus[])
@@ -111,7 +114,7 @@ void infect_computer()
 
 int network_is_fully_infected(int infectedComputers)
 {
-    return infectedComputers == 1001;
+    return infectedComputers == 1000;
     //return 0;
 }
 
