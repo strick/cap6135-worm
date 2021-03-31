@@ -1,11 +1,11 @@
-//#include <stdio.h>
+#include <stdio.h>
 
-#define patientZero 1001
-#define networkOmega 100000
-#define scanRate 3
-#define simulationN 3
-#define simulationTime 1200
-#define t 1
+#define patientZero 1001 // Where the infection starts!
+#define networkOmega 100000 // The number of systems in the network
+#define scanRate 3  // The number of scans an infected computer can do
+#define simulationN 3 // The number of simulations we want to run
+#define simulationTime 3000  // How many times the simulation might run to infect all nodes
+#define t 1 // This is the current time step
 
 enum nodeType
 {
