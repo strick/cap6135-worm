@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 typedef enum 
 {
@@ -15,6 +16,7 @@ typedef enum
 #define simulationTime 3000  // How many times the simulation might run to infect all nodes
 
 void build_network(nodeType NodeStatus[]);
+void run_scan();
 int network_is_fully_infected(int infectedComputers);
 int random_scan(nodeType NodeStatus[]);
 int get_random_ip();
@@ -28,12 +30,21 @@ int lt[simulationN][simulationTime];
 
 int main(void)
 {
-    // The number of infected computers.
-    int infectedComputers = 1;
-    int t = 0;
-
     // Build the network
     build_network(NodeStatus);
+
+    run_scan();
+
+    //save_results();
+
+    return 0;
+}
+
+void run_scan()
+{
+     // The number of infected computers.
+    int infectedComputers = 1;
+    int t = 0;
 
     // While there are still susceptible computers in the network, try to infect more.
     while(!network_is_fully_infected(infectedComputers))
@@ -54,10 +65,6 @@ int main(void)
     }
 
     printf("Took %d cycles.\n", t);
-
-    //save_results();
-
-    return 0;
 }
 
 // Build a network  of 100,000 network nodes with IP addresses from 1 - 100,000
@@ -107,7 +114,8 @@ int random_scan(nodeType NodeStatus[])
 
 int get_random_ip()
 {
-     return rand()%networkOmega + 1;
+    //srand ( time(NULL) );
+    return rand()%networkOmega + 1;
 }
 
 int network_is_fully_infected(int infectedComputers)
