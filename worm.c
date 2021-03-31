@@ -30,11 +30,6 @@ int main(void)
     // Build the network
     build_network(NodeStatus);
 
-    for(int i = 1; i<=1000; i++)
-    {
-        //printf("IP: %d is %d\n", i, NodeStatus[i]);
-    }
-
     // While there are still susceptible computers in the network, try to infect more.
     while(!network_is_fully_infected())
     {
