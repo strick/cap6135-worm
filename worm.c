@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef enum 
 {
@@ -14,8 +15,9 @@ typedef enum
 #define simulationTime 3000  // How many times the simulation might run to infect all nodes
 
 void build_network(nodeType NodeStatus[]);
-int network_is_fully_infected();
-void random_scan(nodeType NodeStatus[]);
+int network_is_fully_infected(int infectedComputers);
+int random_scan(nodeType NodeStatus[]);
+int get_random_ip();
 
 // Create an array of the node types so you can model the network.
 nodeType NodeStatus[networkOmega + 1];
@@ -32,12 +34,19 @@ int main(void)
     build_network(NodeStatus);
 
     // While there are still susceptible computers in the network, try to infect more.
-    while(!network_is_fully_infected())
+    while(!network_is_fully_infected(infectedComputers))
     {
         // For each infected node, preform a random scan
         for(int i=0; i<infectedComputers; i++)
         {
-            random_scan(NodeStatus);
+            int newInfections = 0;
+            newInfections = random_scan(NodeStatus);
+
+            infectedComputers += newInfections;
+
+            if(newInfections > 0){
+                printf("Infected count is up to %d\n", infectedComputers);
+            }
         }
     }
 
@@ -68,9 +77,29 @@ void build_network(nodeType NodeStatus[])
     }
 }
 
-void random_scan(nodeType NodeStatus[])
+int random_scan(nodeType NodeStatus[])
 {
+    int newInfections = 0;
 
+    for(int i=0; i<scanRate; i++){
+
+        // Get a random IP in the network to scan
+       int ip = get_random_ip();
+
+       // If it is susceiptble, then mark it as infected
+       if(NodeStatus[ip] == susceptible)
+       {
+           NodeStatus[ip] = infectious;
+           newInfections++;
+       }
+    }
+
+    return newInfections;
+}
+
+int get_random_ip()
+{
+     return rand()%networkOmega + 1;
 }
 
 void infect_computer()
@@ -78,7 +107,8 @@ void infect_computer()
 
 }
 
-int network_is_fully_infected()
+int network_is_fully_infected(int infectedComputers)
 {
-    return 0;
+    return infectedComputers == 1001;
+    //return 0;
 }
