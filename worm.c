@@ -13,10 +13,10 @@ typedef enum
 #define networkOmega 100000 // The number of systems in the network
 #define scanRate 3  // The number of scans an infected computer can do
 #define simulationN 3 // The number of simulations we want to run
-#define simulationTime 3000  // How many times the simulation might run to infect all nodes
+#define simulationTime 3000000  // How many times the simulation might run to infect all nodes
 
 void build_network(nodeType NodeStatus[]);
-void run_scan();
+int run_scan(int n);
 int network_is_fully_infected(int infectedComputers);
 int random_scan(nodeType NodeStatus[]);
 int get_random_ip();
@@ -30,17 +30,27 @@ int lt[simulationN][simulationTime];
 
 int main(void)
 {
+    int t; 
+
     // Build the network
     build_network(NodeStatus);
 
-    run_scan();
+    for(int i = 0; i<1; i++)
+    {
+        t = run_scan(i);
+        //printf("Simulation %d: %d runs.\n", i, lt[i]);
+    }
+
+    //for(int i=0; i<t; i++){
+    //    printf("At T(%d) there were %d infections\n", i, lt[0][i]);
+    //}
 
     //save_results();
 
     return 0;
 }
 
-void run_scan()
+int run_scan(int n)
 {
      // The number of infected computers.
     int infectedComputers = 1;
@@ -61,10 +71,12 @@ void run_scan()
             infectedComputers += newInfections;            
         }
 
+        printf("T is %d\n", t);
+        lt[n][t] = infectedComputers;
         t++;
     }
 
-    printf("Took %d cycles.\n", t);
+    return t;
 }
 
 // Build a network  of 100,000 network nodes with IP addresses from 1 - 100,000
