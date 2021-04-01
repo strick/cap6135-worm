@@ -22,6 +22,7 @@ int random_scan(nodeType NodeStatus[]);
 int get_random_ip();
 void display_infections(nodeType NodeStatus[]);
 double rand01();
+void save_file(int n, int type, int lt[][simulationTime], int t);
 
 // Create an array of the node types so you can model the network.
 nodeType NodeStatus[networkOmega + 1];
@@ -44,21 +45,11 @@ int main(void)
         // Run run random-scan
         t = run_scan(n, 1);
         build_network(NodeStatus);
+        save_file(n, 1, lt, t);     
 
         // Run local-preferecne
-    
+    //         save_file(n, 2, lt, t);     
 
-        FILE *fp;
-        char filename[100];
-        snprintf(filename, sizeof(filename), "./files/data-%d.txt", n);
-        fp = fopen(filename, "wt" );
-        for(int i=0; i<t; i++){
-            fprintf(fp, "At T(%d) there were %d infections\n", i, lt[n][i]);
-        }
-        
-        fclose(fp);
-
-        printf("T: %d\n", t);
     }
 
     return 0;
@@ -176,4 +167,20 @@ void display_infections(nodeType NodeStatus[])
         } 
 
     }
+}
+
+void save_file(int n, int type, int lt[][simulationTime], int t)
+{
+    FILE *fp;
+    char filename[100];
+    snprintf(filename, sizeof(filename), "./files/data-%d-%d.txt", type, n);
+    fp = fopen(filename, "wt" );
+    for(int i=0; i<t; i++){
+        fprintf(fp, "At T(%d) there were %d infections\n", i, lt[n][i]);
+    }
+    
+    fclose(fp);
+
+            
+        printf("T: %d\n", t);
 }
