@@ -65,7 +65,7 @@ int run_scan(int n, int type)
     int infectedList[1000];
     for(int i=0;i<1000;i++) infectedList[i] = 0;
     infectedList[0] = patientZero;
-    int t = 0;
+    int t = 1;
 
     // While there are still susceptible computers in the network, try to infect more.
     while(!network_is_fully_infected(infectedComputers))
@@ -211,8 +211,8 @@ void save_file(int n, int type, int lt[][simulationTime], int t)
     char filename[100];
     snprintf(filename, sizeof(filename), "./files/data-%d-%d.txt", type, n);
     fp = fopen(filename, "wt" );
-    for(int i=0; i<t; i++){
-        fprintf(fp, "At T(%d) there were %d infections\n", i, lt[n][i]);
+    for(int i=1; i<t; i++){
+        fprintf(fp, "%d\t%d\n", i, lt[n][i]);
     }
     
     fclose(fp);
