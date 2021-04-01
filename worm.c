@@ -16,10 +16,10 @@ typedef enum
 #define simulationTime 3333  // How many times the simulation might run to infect all nodes
 
 void build_network(nodeType NodeStatus[]);
-int run_scan(int n, int type, int infectedList[]);
+int run_scan(int n, int type);
 int network_is_fully_infected(int infectedComputers);
-int random_scan(nodeType NodeStatus[]);
-int local_scan(nodeType NodeStatus[]);
+int random_scan(nodeType NodeStatus[], int attackerIp, int nextIpLocation, int infectedList[]);
+int local_scan(nodeType NodeStatus[], int atttackerIp, int nextIpLocation, int infectedList[]);
 int get_random_ip();
 void display_infections(nodeType NodeStatus[]);
 double rand01();
@@ -30,7 +30,6 @@ nodeType NodeStatus[networkOmega + 1];
 //nodeType PriorNodeStatus[networkOmega + 1];
 
 int lt[simulationN][simulationTime];
-int infectedList[1000];
 
 int main(void)
 {
@@ -42,15 +41,15 @@ int main(void)
     // Build the network
     build_network(NodeStatus);
 
-    for(int n = 0; n<scanRate; n++)
+    for(int n = 0; n<simulationN; n++)
     {        
         // Run run random-scan
-        t = run_scan(n, 1, infectedList);
+        t = run_scan(n, 1);
         build_network(NodeStatus);
         save_file(n, 1, lt, t);     
 
         // Run local-preferecne
-        t = run_scan(n, 2, infectedList);
+        t = run_scan(n, 2);
         build_network(NodeStatus);
         save_file(n, 2, lt, t);     
 
@@ -59,11 +58,13 @@ int main(void)
     return 0;
 }
 
-int run_scan(int n, int type, int infectedList[])
+int run_scan(int n, int type)
 {
      // The number of infected computers.
     int infectedComputers = 1;
-    
+    int infectedList[1000];
+    for(int i=0;i<1000;i++) infectedList[i] = 0;
+    infectedList[0] = patientZero;
     int t = 0;
 
     // While there are still susceptible computers in the network, try to infect more.
@@ -76,17 +77,17 @@ int run_scan(int n, int type, int infectedList[])
 
             // Attemp to infect new computrs
             if(type == 1)
-                newInfections = random_scan(NodeStatus);
+                newInfections = random_scan(NodeStatus, infectedList[i], i+1, infectedList);
             else if(type == 2){
                 
                 // Get the p and if it's 1 or 2
                 if(rand01() <= 2)
                 {
-                    newInfections = random_scan(NodeStatus);
+                    newInfections = random_scan(NodeStatus, infectedList[i], i+1, infectedList);
                 }
                 else
                 {
-                    newInfections = random_scan(NodeStatus);
+                    newInfections = local_scan(NodeStatus, infectedList[i], i+1, infectedList);
                 }
             }
                 
@@ -133,29 +134,35 @@ void build_network(nodeType NodeStatus[])
     NodeStatus[patientZero] = infectious;
 }
 
-int local_scan(nodeType NodeStatus[])
+int local_scan(nodeType NodeStatus[], int attackerIp, int nextIpLocation, int infectedList[])
 {
     int newInfections = 0;
+    int lower = attackerIp - 10;
+    int upper = attackerIp + 10;
+    int next = nextIpLocation;
 
     for(int i=0; i<scanRate; i++){
 
         // Get a random IP in the network to sca
-       int ip = get_random_ip();
+       int ip = (rand() % (upper - lower + 1)) + lower;
 
        // If it is susceiptble, then mark it as infected
        if(NodeStatus[ip] == susceptible)
        {
            NodeStatus[ip] = infectious;
+           infectedList[next] = ip;
            newInfections++;
+           next++;
        }
     }
 
     return newInfections;
 }
 
-int random_scan(nodeType NodeStatus[])
+int random_scan(nodeType NodeStatus[], int attackerIp, int nextIpLocation, int infectedList[])
 {
     int newInfections = 0;
+    int next = nextIpLocation;
 
     for(int i=0; i<scanRate; i++){
 
@@ -166,7 +173,9 @@ int random_scan(nodeType NodeStatus[])
        if(NodeStatus[ip] == susceptible)
        {
            NodeStatus[ip] = infectious;
+           infectedList[next] = ip;
            newInfections++;
+           next++;
        }
     }
 
