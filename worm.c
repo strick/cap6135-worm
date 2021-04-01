@@ -35,23 +35,24 @@ int main(void)
     // Build the network
     build_network(NodeStatus);
 
-    for(int i = 0; i<2; i++)
+    for(int n = 0; n<2; n++)
     {
-        t = run_scan(i);
+        t = run_scan(n);
         build_network(NodeStatus);
         //printf("Simulation %d: %d runs.\n", i, lt[i]);
 
         FILE *fp;
         char filename[100];
-        snprintf(filename, sizeof(filename), "./files/data-%d.txt", i);
-        //printf("%s", filename);
+        snprintf(filename, sizeof(filename), "./files/data-%d.txt", n);
         fp = fopen(filename, "wt" );
+        for(int i=0; i<t; i++){
+            fprintf(fp, "At T(%d) there were %d infections\n", i, lt[0][i]);
+        }
+        
         fclose(fp);
     }
 
-    //for(int i=0; i<t; i++){
-    //    printf("At T(%d) there were %d infections\n", i, lt[0][i]);
-    //}
+    
 
     //save_results();
 
