@@ -21,6 +21,7 @@ int network_is_fully_infected(int infectedComputers);
 int random_scan(nodeType NodeStatus[]);
 int get_random_ip();
 void display_infections(nodeType NodeStatus[]);
+double rand01();
 
 // Create an array of the node types so you can model the network.
 nodeType NodeStatus[networkOmega + 1];
@@ -45,6 +46,7 @@ int main(void)
         build_network(NodeStatus);
 
         // Run local-preferecne
+    
 
         FILE *fp;
         char filename[100];
@@ -96,6 +98,11 @@ int run_scan(int n, int type)
     }
 
     return t;
+}
+
+double rand01()
+{
+    return rand()%10 + 1;
 }
 
 // Build a network  of 100,000 network nodes with IP addresses from 1 - 100,000
