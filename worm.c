@@ -16,7 +16,7 @@ typedef enum
 #define simulationTime 3333  // How many times the simulation might run to infect all nodes
 
 void build_network(nodeType NodeStatus[]);
-int run_scan(int n);
+int run_scan(int n, int type);
 int network_is_fully_infected(int infectedComputers);
 int random_scan(nodeType NodeStatus[]);
 int get_random_ip();
@@ -38,17 +38,20 @@ int main(void)
     // Build the network
     build_network(NodeStatus);
 
-    for(int n = 0; n<2; n++)
+    for(int n = 0; n<scanRate; n++)
     {        
-        t = run_scan(n);
+        // Run run random-scan
+        t = run_scan(n, 1);
         build_network(NodeStatus);
+
+        // Run local-preferecne
 
         FILE *fp;
         char filename[100];
         snprintf(filename, sizeof(filename), "./files/data-%d.txt", n);
         fp = fopen(filename, "wt" );
         for(int i=0; i<t; i++){
-            fprintf(fp, "At T(%d) there were %d infections\n", i, lt[0][i]);
+            fprintf(fp, "At T(%d) there were %d infections\n", i, lt[n][i]);
         }
         
         fclose(fp);
@@ -56,14 +59,10 @@ int main(void)
         printf("T: %d\n", t);
     }
 
-    
-
-    //save_results();
-
     return 0;
 }
 
-int run_scan(int n)
+int run_scan(int n, int type)
 {
      // The number of infected computers.
     int infectedComputers = 1;
@@ -79,7 +78,13 @@ int run_scan(int n)
             int newInfections = 0;
 
             // Attemp to infect new computrs
-            newInfections = random_scan(NodeStatus);
+            if(type == 1)
+                newInfections = random_scan(NodeStatus);
+            else if(type == 2){
+                
+                newInfections = random_scan(NodeStatus);
+            }
+                
 
             // Add to the count of the current infections
             infectedComputers += newInfections;            
