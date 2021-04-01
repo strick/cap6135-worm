@@ -15,14 +15,86 @@ typedef enum
 #define simulationN 3 // The number of simulations we want to run
 #define simulationTime 3333  // How many times the simulation might run to infect all nodes
 
+/**
+ * This will default all of the computers in the network to the predefined states
+ * 
+ * @param nodeType[] NodeStatus array of the current network status
+ */
 void build_network(nodeType NodeStatus[]);
+
+/**
+ * Depending on if the type of scan, random or local,
+ * infect computers until the network is fully infected.
+ *
+ * @param int n - simulation run count
+ * @param int type - 1 for random scan, 2 for local scan
+ * @return int - time taken to fully infect the network
+ */
 int run_scan(int n, int type);
+
+/**
+ * Checks the number of infections found against what is expected in the simulation
+ * 
+ * @param int infectedComputers - current count of infected computers.
+ * @return 1 if the network is full, otherwise 0.
+ */
 int network_is_fully_infected(int infectedComputers);
+
+/**
+ * Runs a random scan to find a computer in the network to infect
+ *
+ * @param nodeType[] NodeeStatus - array of the current network
+ * @param int attackerIp - the IP address of the computer initiating the attack.
+ * @param int nextIpLocation - index to place a newly infected computer in the infectdList
+ * @param int[] InfectedList - container to whole the IP addresses of the infected computers.
+ * @return int - number of newly infected computers
+ */
 int random_scan(nodeType NodeStatus[], int attackerIp, int nextIpLocation, int infectedList[]);
+
+/**
+ * Runs a random scan to find a computer in the network to infect
+ *
+ * @param nodeType[] NodeeStatus - array of the current network
+ * @param int attackerIp - the IP address of the computer initiating the attack.
+ * @param int nextIpLocation - index to place a newly infected computer in the infectdList
+ * @param int[] InfectedList - container to whole the IP addresses of the infected computers.
+ * @return int - number of newly infected computers
+ */
 int local_scan(nodeType NodeStatus[], int atttackerIp, int nextIpLocation, int infectedList[]);
+
+/**
+ * Gets a random IP address between 1 and networkOmega.
+ *
+ * @return int - the random IP address to try and infect.
+ */
 int get_random_ip();
+
+/**
+ * This is just a utility fuction to display the current infections in the network
+
+ * @param nodeType[] NodeeStatus - array of the current network
+ */
 void display_infections(nodeType NodeStatus[]);
+
+/**
+ * Get a probablity value between 1 and 10.
+ * 
+ * @return double value between 1 and 10 to use for probabliity purposes.
+ */
 double rand01();
+
+/**
+ * This saves a tab delimneted file of time \t infection count:
+ *
+ * 1    1
+ * 2    1
+ * 3    2
+ *
+ * @param int n - the current simulation count
+ * @param int type - the type of simulation ran
+ * @param int[][simulationTime] lt - vector of results
+ * @param int t - the total time it took to complete the current simulation.
+ */
 void save_file(int n, int type, int lt[][simulationTime], int t);
 
 // Create an array of the node types so you can model the network.
@@ -136,6 +208,7 @@ void build_network(nodeType NodeStatus[])
 
 int local_scan(nodeType NodeStatus[], int attackerIp, int nextIpLocation, int infectedList[])
 {
+    // TODO:  Refactor local_scan and random_scan into same codebase and just toggle the random ip functionality.
     int newInfections = 0;
     int lower = attackerIp - 10;
     int upper = attackerIp + 10;
@@ -161,6 +234,7 @@ int local_scan(nodeType NodeStatus[], int attackerIp, int nextIpLocation, int in
 
 int random_scan(nodeType NodeStatus[], int attackerIp, int nextIpLocation, int infectedList[])
 {
+    // TODO:  Refactor local_scan and random_scan into same codebase and just toggle the random ip functionality.
     int newInfections = 0;
     int next = nextIpLocation;
 
@@ -216,7 +290,6 @@ void save_file(int n, int type, int lt[][simulationTime], int t)
     }
     
     fclose(fp);
-
-            
-        printf("T: %d\n", t);
+   
+    printf("T: %d\n", t);
 }
