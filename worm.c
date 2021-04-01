@@ -13,7 +13,7 @@ typedef enum
 #define networkOmega 100000 // The number of systems in the network
 #define scanRate 3  // The number of scans an infected computer can do
 #define simulationN 3 // The number of simulations we want to run
-#define simulationTime 3000000  // How many times the simulation might run to infect all nodes
+#define simulationTime 3333  // How many times the simulation might run to infect all nodes
 
 void build_network(nodeType NodeStatus[]);
 int run_scan(int n);
@@ -31,15 +31,17 @@ int lt[simulationN][simulationTime];
 int main(void)
 {
     int t; 
+    // Make sure the IPs are randomized each time.
+    time_t t_time;
+    srand((unsigned) time(&t_time));
 
     // Build the network
     build_network(NodeStatus);
 
     for(int n = 0; n<2; n++)
-    {
+    {        
         t = run_scan(n);
         build_network(NodeStatus);
-        //printf("Simulation %d: %d runs.\n", i, lt[i]);
 
         FILE *fp;
         char filename[100];
@@ -50,6 +52,8 @@ int main(void)
         }
         
         fclose(fp);
+
+        printf("T: %d\n", t);
     }
 
     
@@ -63,6 +67,7 @@ int run_scan(int n)
 {
      // The number of infected computers.
     int infectedComputers = 1;
+    
     int t = 0;
 
     // While there are still susceptible computers in the network, try to infect more.
@@ -80,7 +85,7 @@ int run_scan(int n)
             infectedComputers += newInfections;            
         }
 
-        printf("T is %d\n", t);
+        //printf("T is %d\n", t);
         lt[n][t] = infectedComputers;
         t++;
     }
@@ -119,8 +124,13 @@ int random_scan(nodeType NodeStatus[])
 
     for(int i=0; i<scanRate; i++){
 
-        // Get a random IP in the network to scan
+        // Get a random IP in the network to sca
        int ip = get_random_ip();
+       //while(ip != nodeIP)
+       //{
+       //    ip = get_random_ip();
+       //}
+       
 
        // If it is susceiptble, then mark it as infected
        if(NodeStatus[ip] == susceptible)
@@ -135,7 +145,6 @@ int random_scan(nodeType NodeStatus[])
 
 int get_random_ip()
 {
-    //srand ( time(NULL) );
     return rand()%networkOmega + 1;
 }
 
