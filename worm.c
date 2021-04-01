@@ -24,7 +24,7 @@ void display_infections(nodeType NodeStatus[]);
 
 // Create an array of the node types so you can model the network.
 nodeType NodeStatus[networkOmega + 1];
-nodeType PriorNodeStatus[networkOmega + 1];
+//nodeType PriorNodeStatus[networkOmega + 1];
 
 int lt[simulationN][simulationTime];
 
@@ -35,10 +35,18 @@ int main(void)
     // Build the network
     build_network(NodeStatus);
 
-    for(int i = 0; i<1; i++)
+    for(int i = 0; i<2; i++)
     {
         t = run_scan(i);
+        build_network(NodeStatus);
         //printf("Simulation %d: %d runs.\n", i, lt[i]);
+
+        FILE *fp;
+        char filename[100];
+        snprintf(filename, sizeof(filename), "./files/data-%d.txt", i);
+        //printf("%s", filename);
+        fp = fopen(filename, "wt" );
+        fclose(fp);
     }
 
     //for(int i=0; i<t; i++){
