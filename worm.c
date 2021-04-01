@@ -16,7 +16,7 @@ typedef enum
 #define simulationTime 3333  // How many times the simulation might run to infect all nodes
 
 void build_network(nodeType NodeStatus[]);
-int run_scan(int n, int type);
+int run_scan(int n, int type, int infectedList[]);
 int network_is_fully_infected(int infectedComputers);
 int random_scan(nodeType NodeStatus[]);
 int local_scan(nodeType NodeStatus[]);
@@ -30,6 +30,7 @@ nodeType NodeStatus[networkOmega + 1];
 //nodeType PriorNodeStatus[networkOmega + 1];
 
 int lt[simulationN][simulationTime];
+int infectedList[1000];
 
 int main(void)
 {
@@ -44,12 +45,12 @@ int main(void)
     for(int n = 0; n<scanRate; n++)
     {        
         // Run run random-scan
-        t = run_scan(n, 1);
+        t = run_scan(n, 1, infectedList);
         build_network(NodeStatus);
         save_file(n, 1, lt, t);     
 
         // Run local-preferecne
-        t = run_scan(n, 2);
+        t = run_scan(n, 2, infectedList);
         build_network(NodeStatus);
         save_file(n, 2, lt, t);     
 
@@ -58,7 +59,7 @@ int main(void)
     return 0;
 }
 
-int run_scan(int n, int type)
+int run_scan(int n, int type, int infectedList[])
 {
      // The number of infected computers.
     int infectedComputers = 1;
