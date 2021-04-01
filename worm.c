@@ -19,6 +19,7 @@ void build_network(nodeType NodeStatus[]);
 int run_scan(int n, int type);
 int network_is_fully_infected(int infectedComputers);
 int random_scan(nodeType NodeStatus[]);
+int local_scan(nodeType NodeStatus[]);
 int get_random_ip();
 void display_infections(nodeType NodeStatus[]);
 double rand01();
@@ -48,7 +49,9 @@ int main(void)
         save_file(n, 1, lt, t);     
 
         // Run local-preferecne
-    //         save_file(n, 2, lt, t);     
+        t = run_scan(n, 2);
+        build_network(NodeStatus);
+        save_file(n, 2, lt, t);     
 
     }
 
@@ -75,7 +78,15 @@ int run_scan(int n, int type)
                 newInfections = random_scan(NodeStatus);
             else if(type == 2){
                 
-                newInfections = random_scan(NodeStatus);
+                // Get the p and if it's 1 or 2
+                if(rand01() <= 2)
+                {
+                    newInfections = random_scan(NodeStatus);
+                }
+                else
+                {
+                    newInfections = random_scan(NodeStatus);
+                }
             }
                 
 
@@ -121,6 +132,26 @@ void build_network(nodeType NodeStatus[])
     NodeStatus[patientZero] = infectious;
 }
 
+int local_scan(nodeType NodeStatus[])
+{
+    int newInfections = 0;
+
+    for(int i=0; i<scanRate; i++){
+
+        // Get a random IP in the network to sca
+       int ip = get_random_ip();
+
+       // If it is susceiptble, then mark it as infected
+       if(NodeStatus[ip] == susceptible)
+       {
+           NodeStatus[ip] = infectious;
+           newInfections++;
+       }
+    }
+
+    return newInfections;
+}
+
 int random_scan(nodeType NodeStatus[])
 {
     int newInfections = 0;
@@ -129,11 +160,6 @@ int random_scan(nodeType NodeStatus[])
 
         // Get a random IP in the network to sca
        int ip = get_random_ip();
-       //while(ip != nodeIP)
-       //{
-       //    ip = get_random_ip();
-       //}
-       
 
        // If it is susceiptble, then mark it as infected
        if(NodeStatus[ip] == susceptible)
